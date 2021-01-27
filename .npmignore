@@ -1,0 +1,14 @@
+
+**/**/build
+
+**/**/test
+
+**/**/migrations
+
+**/**/types
+
+truffle.js
+
+tsconfig.json
+
+**/**/.vscode

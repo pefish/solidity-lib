@@ -1,0 +1,11 @@
+**/**/build
+
+**/**/node_modules
+
+**/**/migrations/*.js
+**/**/migrations/*.js.map
+
+**/**/types
+
+.vscode/
+.secret
