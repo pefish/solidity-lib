@@ -4,7 +4,7 @@
   "version": "0.0.3",
   "repository": {
     "type": "git",
-    "url": "https://https://github.com/pefish/solidity-lib.git"
+    "url": "https://github.com/pefish/solidity-lib.git"
   },
   "keywords": [
     "solidity",
@@ -16,7 +16,7 @@
   "author": "Pefish",
   "license": "MIT",
   "bugs": {
-    "url": "https://https://github.com/pefish/solidity-lib/issues"
+    "url": "https://github.com/pefish/solidity-lib/issues"
   },
   "homepage": "https://github.com/pefish/solidity-lib",
   "scripts": {
