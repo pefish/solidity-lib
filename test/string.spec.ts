@@ -5,7 +5,7 @@ const StringMock = artifacts.require("StringMock");
 contract('String', (accounts) => {
   let stringMockInstance: StringMockInstance
 
-  before(async function () {
+  beforeEach(async function () {
     stringMockInstance = await StringMock.new();
   });
 
