@@ -1,4 +1,7 @@
 import { StringMockInstance } from "../types/truffle-contracts";
+import Web3 from "web3"
+
+declare var web3: Web3;
 
 const StringMock = artifacts.require("StringMock");
 
