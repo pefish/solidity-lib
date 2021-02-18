@@ -11,6 +11,14 @@ library BigNumberUtil {
         return BigNumber({mantissa: add_(a.mantissa, b.mantissa)});
     }
 
+    function add_(BigNumber memory a, uint b) pure internal returns (BigNumber memory) {
+        return BigNumber({mantissa: add_(a.mantissa, mul_(b, scale))});
+    }
+
+    function add_(uint a, BigNumber memory b) pure internal returns (BigNumber memory) {
+        return BigNumber({mantissa: add_(mul_(a, scale), b.mantissa)});
+    }
+
     function add_(uint a, uint b) pure internal returns (uint) {
         uint c = a + b;
         require(c >= a, "addition overflow");
@@ -19,6 +27,14 @@ library BigNumberUtil {
 
     function sub_(BigNumber memory a, BigNumber memory b) pure internal returns (BigNumber memory) {
         return BigNumber({mantissa: sub_(a.mantissa, b.mantissa)});
+    }
+
+    function sub_(BigNumber memory a, uint b) pure internal returns (BigNumber memory) {
+        return BigNumber({mantissa: sub_(a.mantissa, mul_(b, scale))});
+    }
+
+    function sub_(uint a, BigNumber memory b) pure internal returns (BigNumber memory) {
+        return BigNumber({mantissa: sub_(mul_(a, scale), b.mantissa)});
     }
 
     function sub_(uint a, uint b) pure internal returns (uint) {
@@ -34,8 +50,8 @@ library BigNumberUtil {
         return BigNumber({mantissa: mul_(a.mantissa, b)});
     }
 
-    function mul_(uint a, BigNumber memory b) pure internal returns (uint) {
-        return mul_(a, b.mantissa) / scale;
+    function mul_(uint a, BigNumber memory b) pure internal returns (BigNumber memory) {
+        return BigNumber({mantissa: mul_(a, b.mantissa)});
     }
 
     function mul_(uint a, uint b) pure internal returns (uint) {
@@ -55,8 +71,8 @@ library BigNumberUtil {
         return BigNumber({mantissa: div_(a.mantissa, b)});
     }
 
-    function div_(uint a, BigNumber memory b) pure internal returns (uint) {
-        return div_(mul_(a, scale), b.mantissa);
+    function div_(uint a, BigNumber memory b) pure internal returns (BigNumber memory) {
+        return BigNumber({mantissa: div_(mul_(a, scale), b.mantissa)});
     }
 
     function div_(uint a, uint b) pure internal returns (uint) {

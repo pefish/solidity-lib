@@ -15,6 +15,6 @@ contract('BigNumberUtil', (accounts) => {
   it('div', async () => {
     const result = await bigNumberMockInstance.div()
     // console.log(result.toString())
-    assert.equal(result.toString(), "3333333333333333333333333333333333333", "toString error");
+    assert.equal(result.toString(), "123", "toString error");
   });
 });
