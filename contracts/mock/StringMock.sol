@@ -2,14 +2,17 @@
 
 pragma solidity >=0.8.0;
 
-import { String } from "../library/String.sol";
+import { StringUtil } from "../library/StringUtil.sol";
 
 contract StringMock {
+    using StringUtil for uint256;
+    using StringUtil for string;
+
     function uint256ToString(uint256 value) public pure returns (string memory) {
-        return String.uint256ToString(value);
+        return value.uint256ToString();
     }
 
     function isEqual(string memory v1, string memory v2) public pure returns (bool) {
-        return String.isEqual(v1, v2);
+        return v1.isEqual(v2);
     }
 }

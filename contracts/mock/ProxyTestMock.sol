@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract ProxyTest {
+contract ProxyTestMock {
 
     event StoreWords(uint256 addr);
     event StoreA(uint256 a);

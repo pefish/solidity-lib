@@ -3,7 +3,7 @@
 pragma solidity >=0.8.0;
 
 /** @title string 类型相关工具 */
-library String {
+library StringUtil {
     /**
      * @dev 整型数字转化为字符串
      */
