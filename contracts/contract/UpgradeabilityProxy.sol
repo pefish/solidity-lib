@@ -2,52 +2,77 @@
 
 pragma solidity >=0.8.0;
 
-import { Ownable } from "./Ownable.sol";
+import {Ownable} from "./Ownable.sol";
+import {AddressUtil} from "../library/AddressUtil.sol";
 
 contract UpgradeabilityProxy is Ownable {
+    event Upgraded(address indexed implementation);
 
-  event Upgraded(address indexed implementation);
+    bytes32 internal constant _IMPLEMENTATION_SLOT =
+        0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
 
-  bytes32 internal constant IMPLEMENTATION_SLOT = 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
-
-  constructor(address _implementation) Ownable() {
-    bytes32 slot = IMPLEMENTATION_SLOT;
-    assembly {
-      sstore(slot, _implementation)
+    constructor(address _implementation) Ownable() {
+        _setImplementation(_implementation);
+        emit Upgraded(_implementation);
     }
-    emit Upgraded(_implementation);
-  }
 
-  function implementation() public view returns (address impl) {
-    bytes32 slot = IMPLEMENTATION_SLOT;
-    assembly {
-      impl := sload(slot)
+    function implementation() public view returns (address impl) {
+        bytes32 slot = _IMPLEMENTATION_SLOT;
+        assembly {
+            impl := sload(slot)
+        }
     }
-  }
 
-  function upgradeTo(address newImplementation) public onlyOwner {
-    bytes32 slot = IMPLEMENTATION_SLOT;
-    assembly {
-      sstore(slot, newImplementation)
+    function upgradeTo(address newImplementation) public onlyOwner {
+        _setImplementation(newImplementation);
+        emit Upgraded(newImplementation);
     }
-    emit Upgraded(newImplementation);
-  }
 
+    function _setImplementation(address newImplementation) private {
+        require(
+            AddressUtil.isContract(newImplementation),
+            "UpgradeableProxy: new implementation is not a contract"
+        );
 
-  // 不支持 string 等类型
-  fallback () external payable {
-    address implementationAddress = implementation();
-    require(implementationAddress != address(0), "implementationAddress is address 0");
-    assembly {
-      calldatacopy(0, 0, calldatasize())
-      let result := delegatecall(gas(), implementationAddress, 0, calldatasize(), 0, 0)
+        bytes32 slot = _IMPLEMENTATION_SLOT;
 
-      returndatacopy(0, 0, returndatasize())
-
-      switch result
-      case 0 { revert(0, returndatasize()) }
-      default { return(0, returndatasize()) }
+        // solhint-disable-next-line no-inline-assembly
+        assembly {
+            sstore(slot, newImplementation)
+        }
     }
-  }
+
+    // 不支持 string 等类型
+    function _fallback() internal virtual {
+        address implementationAddress = implementation();
+        assembly {
+            calldatacopy(0, 0, calldatasize())
+            let result := delegatecall(
+                gas(),
+                implementationAddress,
+                0,
+                calldatasize(),
+                0,
+                0
+            )
+
+            returndatacopy(0, 0, returndatasize())
+
+            switch result
+                case 0 {
+                    revert(0, returndatasize())
+                }
+                default {
+                    return(0, returndatasize())
+                }
+        }
+    }
+
+    fallback () external payable virtual {
+        _fallback();
+    }
+
+    receive () external payable virtual {
+        _fallback();
+    }
 }
-
