@@ -5,16 +5,11 @@ pragma solidity >=0.8.0;
 import {Ownable} from "./Ownable.sol";
 import {AddressUtil} from "../library/AddressUtil.sol";
 
-contract UpgradeabilityProxy is Ownable {
+abstract contract UpgradeabilityProxy is Ownable {
     event Upgraded(address indexed implementation);
 
     bytes32 internal constant _IMPLEMENTATION_SLOT =
         0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
-
-    constructor(address _implementation) Ownable() {
-        _setImplementation(_implementation);
-        emit Upgraded(_implementation);
-    }
 
     function implementation() public view returns (address impl) {
         bytes32 slot = _IMPLEMENTATION_SLOT;

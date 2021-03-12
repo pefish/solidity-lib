@@ -5,7 +5,7 @@ pragma solidity >=0.8.0;
 import {Ownable} from "./Ownable.sol";
 import { IErc20 } from "../interface/IErc20.sol";
 
-contract Withdrawable is Ownable {
+abstract contract Withdrawable is Ownable {
     function withdraw(address tokenAddress, uint256 amount) public onlyOwner {
         if (tokenAddress == address(0)) {
             if (amount == 0) {

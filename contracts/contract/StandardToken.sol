@@ -5,7 +5,7 @@ pragma solidity >=0.8.0;
 import {IErc20} from "../interface/IErc20.sol";
 import {Ownable} from "./Ownable.sol";
 
-contract StandardToken is IErc20, Ownable {
+abstract contract StandardToken is IErc20, Ownable {
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
     string public name;
