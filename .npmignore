@@ -12,3 +12,5 @@ truffle.js
 tsconfig.json
 
 **/**/.vscode
+
+.idea
