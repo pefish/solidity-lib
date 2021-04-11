@@ -16,6 +16,7 @@
 ## 测试
 
 * yarn test
+* yarn test ./test/Erc20TokenWithMint.spec.ts
 
 ## 发布测试网
 

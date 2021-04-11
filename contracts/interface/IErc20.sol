@@ -13,8 +13,8 @@ interface IErc20 {
         address src, address dst, uint256 wad
     ) external returns (bool);
 
-    function mint(address account, uint256 amount) external returns (bool);
-    function burn(uint256 amount) external returns (bool);
+//    function mint(address account, uint256 amount) external returns (bool);
+//    function burn(uint256 amount) external returns (bool);
 
     event Approval(address indexed src, address indexed guy, uint256 wad);
     event Transfer(address indexed src, address indexed dst, uint256 wad);
