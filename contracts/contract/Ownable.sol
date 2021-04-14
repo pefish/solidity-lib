@@ -13,10 +13,10 @@ abstract contract Ownable {
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
     /**
-     * @dev The Ownable constructor sets the original `owner` of the contract to the sender
+     * @dev init function sets the original `owner` of the contract to the sender
      * account.
      */
-    constructor () {
+    function __Ownable_init () internal {
         _owner = msg.sender;
         emit OwnershipTransferred(address(0), _owner);
     }

@@ -9,12 +9,12 @@ library IterableMapping {
         uint256 size;
     }
     struct IndexValue {
-        uint256 keyIndex;  // 指向 keys 数组的第几个位置
+        uint256 keyIndex;
         uint256 value;
     }
     struct KeyFlag {
         uint256 key;
-        bool deleted;  // 标记这个元素是否已删除
+        bool deleted;
     }
 
     function insert(

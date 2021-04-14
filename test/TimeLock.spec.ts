@@ -1,4 +1,4 @@
-import {Erc20TokenWithMintInstance, TimeLockInstance} from "../types/truffle-contracts";
+import {TimeLockInstance, Erc20TokenMockInstance} from "../types/truffle-contracts";
 import Web3 from "web3"
 import {NumberUtil} from "@pefish/js-node-assist";
 import { EthWallet } from "@pefish/js-coin-eth"
@@ -7,7 +7,7 @@ import TimeUtil from "@pefish/js-util-time"
 declare var web3: Web3;
 
 const TimeLockMock = artifacts.require("TimeLockMock");
-const Erc20TokenWithMintMock = artifacts.require("Erc20TokenWithMintMock");
+const Erc20TokenMock = artifacts.require("Erc20TokenMock");
 
 contract('TimeLock', (accounts) => {
   let timeLockMockInstance: TimeLockInstance
@@ -18,7 +18,7 @@ contract('TimeLock', (accounts) => {
 
   it('executeTransaction', async () => {
     // 初始化一个 Erc20TokenWithMint
-    const erc20TokenWithMintMockInstance: Erc20TokenWithMintInstance = await Erc20TokenWithMintMock.new("10000000000000", "ABC", "ABC", 18);
+    const erc20TokenWithMintMockInstance: Erc20TokenMockInstance = await Erc20TokenMock.new("10000000000000", "ABC", "ABC", 18);
     // 更改 owner 为 timelock
     await erc20TokenWithMintMockInstance.transferOwnership(timeLockMockInstance.address)
     const newOwner = await erc20TokenWithMintMockInstance.owner()

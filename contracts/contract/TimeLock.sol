@@ -11,8 +11,8 @@ abstract contract TimeLock {
   event ExecuteTransaction(bytes32 indexed txHash, address indexed target, uint value, string signature,  bytes data, uint eta);
   event QueueTransaction(bytes32 indexed txHash, address indexed target, uint value, string signature, bytes data, uint eta);
 
-  uint public constant GRACE_PERIOD = 14 days;  // 提交的交易必须在14天内执行
-  uint public constant MINIMUM_DELAY = 6 hours;  // 延迟执行时间
+  uint public constant GRACE_PERIOD = 14 days;
+  uint public constant MINIMUM_DELAY = 6 hours;
   uint public constant MAXIMUM_DELAY = 30 days;
 
   address public admin;
@@ -61,7 +61,7 @@ abstract contract TimeLock {
     emit NewPendingAdmin(pendingAdmin);
   }
 
-  // 先提交延迟交易到缓存。eta 指定了可以执行的最早时间（必须大于等于延迟后的时间）
+
   function queueTransaction(address target, uint value, string memory signature, bytes memory data, uint eta) public returns (bytes32) {
     require(msg.sender == admin, "Timelock::queueTransaction: Call must come from admin.");
     require(eta >= getBlockTimestamp() + delay, "Timelock::queueTransaction: Estimated execution block must satisfy delay.");
@@ -73,7 +73,6 @@ abstract contract TimeLock {
     return txHash;
   }
 
-  // 取消延迟中的交易
   function cancelTransaction(address target, uint value, string memory signature, bytes memory data, uint eta) public {
     require(msg.sender == admin, "Timelock::cancelTransaction: Call must come from admin.");
 
@@ -83,7 +82,6 @@ abstract contract TimeLock {
     emit CancelTransaction(txHash, target, value, signature, data, eta);
   }
 
-  // 执行延迟中的方法
   function executeTransaction(address target, uint value, string memory signature, bytes memory data, uint eta) public payable returns (bytes memory) {
     require(msg.sender == admin, "Timelock::executeTransaction: Call must come from admin.");
 

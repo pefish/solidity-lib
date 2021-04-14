@@ -11,6 +11,11 @@ abstract contract UpgradeabilityProxy is Ownable {
     bytes32 internal constant _IMPLEMENTATION_SLOT =
         0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
 
+
+    function __UpgradeabilityProxy_init () internal {
+        Ownable.__Ownable_init();
+    }
+
     function implementation() public view returns (address impl) {
         bytes32 slot = _IMPLEMENTATION_SLOT;
         assembly {
@@ -26,7 +31,7 @@ abstract contract UpgradeabilityProxy is Ownable {
     function _setImplementation(address newImplementation) private {
         require(
             AddressUtil.isContract(newImplementation),
-            "UpgradeableProxy: new implementation is not a contract"
+            "UpgradeableProxy::_setImplementation:: new implementation is not a contract"
         );
 
         bytes32 slot = _IMPLEMENTATION_SLOT;
@@ -37,7 +42,6 @@ abstract contract UpgradeabilityProxy is Ownable {
         }
     }
 
-    // 不支持 string 等类型
     function _fallback() internal virtual {
         address implementationAddress = implementation();
         assembly {

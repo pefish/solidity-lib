@@ -1,4 +1,4 @@
-import { ProxyInstance } from "../types/truffle-contracts";
+import { UpgradeabilityProxyInstance } from "../types/truffle-contracts";
 import Web3 from "web3"
 
 declare var web3: Web3;
@@ -7,7 +7,7 @@ const Proxy = artifacts.require("ProxyMock");
 const ProxyTest = artifacts.require("ProxyTestMock");
 
 contract('Proxy', (accounts) => {
-  let proxyInstance: ProxyInstance
+  let proxyInstance: UpgradeabilityProxyInstance
 
   beforeEach(async function () {
     const testInstance = await ProxyTest.new()

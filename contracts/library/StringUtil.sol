@@ -2,10 +2,10 @@
 
 pragma solidity >=0.8.0;
 
-/** @title string 类型相关工具 */
+/** @title string util */
 library StringUtil {
     /**
-     * @dev 整型数字转化为字符串
+     * @dev uint256 -> string
      */
     function uint256ToString(uint256 value) internal pure returns (string memory) {
         if (value == 0) {
