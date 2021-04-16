@@ -9,7 +9,7 @@ abstract contract Erc20Token is IErc20 {
     mapping(address => mapping(address => uint256)) private _allowances;
     string public name;
     string public symbol;
-    uint8 public decimals;
+    uint8 public override decimals;
     uint256 public override totalSupply;
 
     function __Erc20Token_init(
