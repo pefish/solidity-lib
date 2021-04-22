@@ -23,4 +23,8 @@ contract('String', (accounts) => {
     assert.equal(await stringMockInstance.isEqual("78", "-3"), false, "isEqual error");
     assert.equal(await stringMockInstance.isEqual("6547", "6547"), true, "isEqual error");
   });
+
+  it('testAppend', async () => {
+    assert.equal(await stringMockInstance.testAppend("4", "6567"), "46567");
+  });
 });

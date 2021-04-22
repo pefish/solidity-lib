@@ -15,4 +15,8 @@ contract StringMock {
     function isEqual(string memory v1, string memory v2) public pure returns (bool) {
         return v1.isEqual(v2);
     }
+
+    function testAppend(string memory a, string memory b) public pure returns (string memory) {
+        return StringUtil.append(a, b);
+    }
 }
