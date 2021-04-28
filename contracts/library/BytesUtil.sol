@@ -2,6 +2,8 @@
 
 pragma solidity >=0.8.0;
 
+import { Uint256Util } from "./Uint256Util.sol";
+
 library BytesUtil {
   using BytesUtil for bytes;
   /// @dev Gets the memory address for a byte array.
@@ -427,5 +429,39 @@ library BytesUtil {
     assembly {
       mstore(b, length)
     }
+  }
+
+  function recover(bytes memory _msgBytes, uint8 _v, bytes32 _r, bytes32 _s) internal pure returns (address) {
+    bytes memory fullMessage = concat(
+      bytes("\x19Ethereum Signed Message:\n"),
+      bytes(Uint256Util.toString(_msgBytes.length)),
+      _msgBytes,
+      new bytes(0), new bytes(0), new bytes(0), new bytes(0)
+    );
+    return ecrecover(keccak256(fullMessage), _v, _r, _s);
+  }
+
+
+  function concat(bytes memory ba, bytes memory bb, bytes memory bc, bytes memory bd, bytes memory be, bytes memory bf, bytes memory bg) internal pure returns (bytes memory) {
+    bytes memory resultBytes = new bytes(ba.length + bb.length + bc.length + bd.length + be.length + bf.length + bg.length);
+    uint k = 0;
+    for (uint i = 0; i < ba.length; i++) resultBytes[k++] = ba[i];
+    for (uint i = 0; i < bb.length; i++) resultBytes[k++] = bb[i];
+    for (uint i = 0; i < bc.length; i++) resultBytes[k++] = bc[i];
+    for (uint i = 0; i < bd.length; i++) resultBytes[k++] = bd[i];
+    for (uint i = 0; i < be.length; i++) resultBytes[k++] = be[i];
+    for (uint i = 0; i < bf.length; i++) resultBytes[k++] = bf[i];
+    for (uint i = 0; i < bg.length; i++) resultBytes[k++] = bg[i];
+    return resultBytes;
+  }
+
+  function toHexString(bytes memory _value) internal pure returns (string memory) {
+    bytes memory alphabet = "0123456789abcdef";
+    bytes memory str = new bytes(64);
+    for (uint256 i = 0; i < _value.length; i++) {
+      str[i*2] = alphabet[uint8(_value[i] >> 4)];
+      str[1+i*2] = alphabet[uint8(_value[i] & 0x0f)];
+    }
+    return string(str);
   }
 }

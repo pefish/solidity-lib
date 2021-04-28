@@ -2,38 +2,13 @@
 
 pragma solidity >=0.8.0;
 
+import { BytesUtil } from "./BytesUtil.sol";
+
 /** @title string util */
 library StringUtil {
-    /**
-     * @dev uint256 -> string
-     */
-    function uint256ToString(uint256 value) internal pure returns (string memory) {
-        if (value == 0) {
-            return "0";
-        }
-        uint256 temp = value;
-        uint256 digits;
-        while (temp != 0) {
-            digits++;
-            temp /= 10;
-        }
-        bytes memory buffer = new bytes(digits);
-        uint256 index = digits - 1;
-        temp = value;
-        while (true) {
-            buffer[index] = bytes1(uint8(48 + temp % 10));
-            if (index > 0) {
-                index = index - 1;
-                temp /= 10;
-            } else {
-                break;
-            }
-        }
-        return string(buffer);
-    }
 
-    function isEqual(string memory v1, string memory v2) internal pure returns (bool) {
-        return uint(keccak256(abi.encodePacked(v1))) == uint(keccak256(abi.encodePacked(v2)));
+    function isEqual(string memory _v1, string memory _v2) internal pure returns (bool) {
+        return uint(keccak256(abi.encodePacked(_v1))) == uint(keccak256(abi.encodePacked(_v2)));
     }
 
     function append(string memory _a, string memory _b) internal pure returns (string memory) {
@@ -58,4 +33,7 @@ library StringUtil {
         return string(bbb);
     }
 
+    function recover(string memory _msg, uint8 _v, bytes32 _r, bytes32 _s) internal pure returns (address) {
+        return BytesUtil.recover(bytes(_msg), _v, _r, _s);
+    }
 }
