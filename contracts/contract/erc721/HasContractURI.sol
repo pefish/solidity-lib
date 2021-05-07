@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.8.0;
-import "../Erc165.sol";
+import "../erc165/Erc165Base.sol";
 
-contract HasContractURI is Erc165 {
+contract HasContractURI is Erc165Base {
 
   string public contractURI;
 
@@ -13,7 +13,8 @@ contract HasContractURI is Erc165 {
    */
   bytes4 private constant _INTERFACE_ID_CONTRACT_URI = 0xe8a3d485;
 
-  constructor(string memory _contractURI) {
+  function __HasContractURI_init(string memory _contractURI) internal {
+    Erc165Base.__Erc165Base_init();
     contractURI = _contractURI;
     _registerInterface(_INTERFACE_ID_CONTRACT_URI);
   }

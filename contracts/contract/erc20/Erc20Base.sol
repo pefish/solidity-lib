@@ -2,9 +2,9 @@
 
 pragma solidity >=0.8.0;
 
-import {IErc20} from "../interface/IErc20.sol";
+import {IErc20} from "../../interface/IErc20.sol";
 
-abstract contract Erc20Token is IErc20 {
+abstract contract Erc20Base is IErc20 {
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
     string public name;
@@ -12,7 +12,7 @@ abstract contract Erc20Token is IErc20 {
     uint8 public override decimals;
     uint256 public override totalSupply;
 
-    function __Erc20Token_init(
+    function __Erc20Base_init(
         uint256 _initialSupply,
         string memory _name,
         string memory _symbol,

@@ -6,7 +6,7 @@ pragma solidity >=0.8.0;
 import "./HasSecondarySaleFees.sol";
 import "./HasContractURI.sol";
 import "./HasTokenURI.sol";
-import "./Erc721Enumerable.sol";
+import "./Erc721Base.sol";
 
 /**
  * @title Full ERC721 Token with support for tokenURIPrefix
@@ -14,7 +14,7 @@ import "./Erc721Enumerable.sol";
  * Moreover, it includes approve all functionality using operator terminology
  * @dev see https://eips.ethereum.org/EIPS/eip-721
  */
-contract Erc721 is HasSecondarySaleFees, HasContractURI, HasTokenURI, Erc721Enumerable {
+contract Erc721 is HasSecondarySaleFees, HasContractURI, HasTokenURI, Erc721Base {
   // Token name
   string public name;
 
@@ -41,7 +41,11 @@ contract Erc721 is HasSecondarySaleFees, HasContractURI, HasTokenURI, Erc721Enum
   /**
    * @dev Constructor function
    */
-  constructor (string memory _name, string memory _symbol, string memory contractURI, string memory _tokenURIPrefix) HasContractURI(contractURI) HasTokenURI(_tokenURIPrefix) {
+  constructor (string memory _name, string memory _symbol, string memory contractURI, string memory _tokenURIPrefix) {
+    Erc721Base.__Erc721Base_init();
+    HasSecondarySaleFees.__HasSecondarySaleFees_init();
+    HasTokenURI.__HasTokenURI_init(_tokenURIPrefix);
+    HasContractURI.__HasContractURI_init(contractURI);
     name = _name;
     symbol = _symbol;
 

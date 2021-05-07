@@ -2,11 +2,11 @@
 
 pragma solidity >=0.8.0;
 
-import "../Erc165.sol";
+import "../erc165/Erc165Base.sol";
 import {IErc721Receiver} from "../../interface/IErc721Receiver.sol";
 import {AddressUtil} from "../../library/AddressUtil.sol";
 
-contract Erc721Base is Erc165 {
+contract Erc721Base is Erc165Base {
   event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
   event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
   event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
@@ -44,7 +44,8 @@ contract Erc721Base is Erc165 {
   bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
 
 
-  constructor () {
+  function __Erc721Base_init () internal {
+    Erc165Base.__Erc165Base_init();
     // register the supported interfaces to conform to ERC721 via ERC165
     _registerInterface(_INTERFACE_ID_ERC721);
   }

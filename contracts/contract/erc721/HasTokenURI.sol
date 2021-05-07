@@ -13,7 +13,7 @@ contract HasTokenURI {
   // Optional mapping for token URIs
   mapping(uint256 => string) private _tokenURIs;
 
-  constructor(string memory _tokenURIPrefix) {
+  function __HasTokenURI_init(string memory _tokenURIPrefix) internal {
     tokenURIPrefix = _tokenURIPrefix;
   }
 

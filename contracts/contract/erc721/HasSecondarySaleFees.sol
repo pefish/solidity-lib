@@ -3,9 +3,9 @@
 
 pragma solidity >=0.8.0;
 
-import "../Erc165.sol";
+import "../erc165/Erc165Base.sol";
 
-abstract contract HasSecondarySaleFees is Erc165 {
+abstract contract HasSecondarySaleFees is Erc165Base {
 
   event SecondarySaleFees(uint256 tokenId, address[] recipients, uint[] bps);
 
@@ -17,7 +17,8 @@ abstract contract HasSecondarySaleFees is Erc165 {
    */
   bytes4 private constant _INTERFACE_ID_FEES = 0xb7799584;
 
-  constructor() {
+  function __HasSecondarySaleFees_init() internal {
+    Erc165Base.__Erc165Base_init();
     _registerInterface(_INTERFACE_ID_FEES);
   }
 

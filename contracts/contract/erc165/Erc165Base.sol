@@ -8,7 +8,7 @@ pragma solidity >=0.8.0;
  * Contracts may inherit from this and call {_registerInterface} to declare
  * their support of an interface.
  */
-contract Erc165 {
+contract Erc165Base {
   /*
    * bytes4(keccak256('supportsInterface(bytes4)')) == 0x01ffc9a7
    */
@@ -19,7 +19,7 @@ contract Erc165 {
    */
   mapping(bytes4 => bool) private _supportedInterfaces;
 
-  constructor () {
+  function __Erc165Base_init () internal {
     // Derived contracts need only register support for their own interfaces,
     // we register support for ERC165 itself here
     _registerInterface(_INTERFACE_ID_ERC165);
@@ -30,7 +30,7 @@ contract Erc165 {
    *
    * Time complexity O(1), guaranteed to always use less than 30 000 gas.
    */
-  function supportsInterface(bytes4 interfaceId) external view returns (bool) {
+  function supportsInterface(bytes4 interfaceId) public virtual view returns (bool) {
     return _supportedInterfaces[interfaceId];
   }
 

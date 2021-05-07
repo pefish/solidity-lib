@@ -2,17 +2,17 @@
 
 pragma solidity >=0.8.0;
 
-import { Erc20Token } from "../contract/Erc20Token.sol";
+import { Erc20Base } from "../contract/erc20/Erc20Base.sol";
 import "../contract/Ownable.sol";
 
-contract Erc20TokenMock is Erc20Token, Ownable {
+contract Erc20TokenMock is Erc20Base, Ownable {
     constructor(
         uint256 _initialSupply,
         string memory _name,
         string memory _symbol,
         uint8 _decimals
     ) {
-        Erc20Token.__Erc20Token_init(_initialSupply, _name, _symbol, _decimals);
+        Erc20Base.__Erc20Base_init(_initialSupply, _name, _symbol, _decimals);
         Ownable.__Ownable_init();
     }
 
