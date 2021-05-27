@@ -3,7 +3,7 @@
 pragma solidity >=0.8.0;
 
 
-contract Pausable {
+abstract contract Pausable {
   /**
    * @dev Emitted when the pause is triggered by `account`.
    */
@@ -14,21 +14,17 @@ contract Pausable {
    */
   event Unpaused(address account);
 
-  bool private _paused;
+  bool public paused;
+  address public pauseOwner;
 
-  /**
-   * @dev init function initializes the contract in unpaused state.
-   * account.
-   */
-  function __Pausable_init () internal {
-    _paused = false;
+  modifier auth () {
+    require(msg.sender == pauseOwner, "must be pauseOwner");
+    _;
   }
 
-  /**
-   * @dev Returns true if the contract is paused, and false otherwise.
-   */
-  function paused() public view returns (bool) {
-    return _paused;
+  function __Pausable_init (address _pauseOwner) internal {
+    pauseOwner = _pauseOwner;
+    paused = false;
   }
 
   /**
@@ -39,7 +35,7 @@ contract Pausable {
    * - The contract must not be paused.
    */
   modifier whenNotPaused() {
-    require(!_paused, "Pausable::whenNotPaused:: paused");
+    require(!paused, "Pausable::whenNotPaused:: paused");
     _;
   }
 
@@ -51,8 +47,12 @@ contract Pausable {
    * - The contract must be paused.
    */
   modifier whenPaused() {
-    require(_paused, "Pausable::whenPaused:: not paused");
+    require(paused, "Pausable::whenPaused:: not paused");
     _;
+  }
+
+  function pause() external auth {
+    _pause();
   }
 
   /**
@@ -63,8 +63,12 @@ contract Pausable {
    * - The contract must not be paused.
    */
   function _pause() internal virtual whenNotPaused {
-    _paused = true;
+    paused = true;
     emit Paused(msg.sender);
+  }
+
+  function unpause() external auth {
+    _unpause();
   }
 
   /**
@@ -75,7 +79,7 @@ contract Pausable {
    * - The contract must be paused.
    */
   function _unpause() internal virtual whenPaused {
-    _paused = false;
+    paused = false;
     emit Unpaused(msg.sender);
   }
 }
