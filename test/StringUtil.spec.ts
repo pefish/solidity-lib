@@ -23,6 +23,14 @@ contract('String', (accounts) => {
     assert.equal(await stringMockInstance.testAppend("4", "6567"), "46567");
   });
 
+  it('testAppend1', async () => {
+    try {
+      await stringMockInstance.testAppend1(2000)
+    } catch (err) {
+      assert.equal(err.message.includes("revert error: 2000"), true);
+    }
+  });
+
   it('testRecover', async () => {
     const wallet = new EthWallet()
     const msg = "test"
