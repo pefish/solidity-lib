@@ -6,7 +6,18 @@ import { IErc20 } from "../interface/IErc20.sol";
 
 abstract contract Withdrawable {
 
-    function _withdraw(address tokenAddress, uint256 amount) internal {
+    address public withdrawOwner;
+
+    modifier auth () {
+        require(msg.sender == withdrawOwner, "must be withdrawOwner");
+        _;
+    }
+
+    function __Withdrawable_init (address _withdrawOwner) internal {
+        withdrawOwner = _withdrawOwner;
+    }
+
+    function withdraw(address tokenAddress, uint256 amount) public auth {
         if (tokenAddress == address(0)) {
             if (amount == 0) {
                 amount = address(this).balance;
@@ -20,10 +31,10 @@ abstract contract Withdrawable {
         }
     }
 
-    function _withdrawAll (address[] memory tokenAddresses, uint256[] memory amounts) internal {
+    function withdrawAll (address[] memory tokenAddresses, uint256[] memory amounts) external auth {
         require(tokenAddresses.length == amounts.length, "Withdrawable::_withdrawAll:: length not equals");
         for (uint256 i = 0; i < tokenAddresses.length; i++) {
-            _withdraw(tokenAddresses[i], amounts[i]);
+            withdraw(tokenAddresses[i], amounts[i]);
         }
     }
 }

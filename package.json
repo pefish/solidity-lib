@@ -1,7 +1,7 @@
 {
   "name": "@pefish/solidity-lib",
   "description": "Solidity libs",
-  "version": "0.1.9",
+  "version": "0.1.11",
   "repository": {
     "type": "git",
     "url": "https://github.com/pefish/solidity-lib.git"
@@ -44,6 +44,7 @@
     "@types/mocha": "^8.0.3",
     "@types/node": "^14.11.2",
     "postinstall-postinstall": "^2.1.0",
+    "truffle": "^5.3.7",
     "truffle-typings": "^1.0.8",
     "ts-generator": "^0.0.8",
     "ts-node": "^9.0.0",
