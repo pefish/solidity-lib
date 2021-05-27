@@ -6,7 +6,7 @@ abstract contract CallAnyContract {
 
     address public callAnyContractOwner;
 
-    modifier auth () {
+    modifier __CallAnyContract_auth () {
         require(msg.sender == callAnyContractOwner, "must be callAnyContractOwner");
         _;
     }
@@ -15,7 +15,7 @@ abstract contract CallAnyContract {
         callAnyContractOwner = _callAnyContractOwner;
     }
 
-    function callAnyContract(address token, bytes memory data) external auth {
+    function callAnyContract(address token, bytes memory data) external __CallAnyContract_auth {
         _callAnyContract(token, data);
     }
 

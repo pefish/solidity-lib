@@ -17,7 +17,7 @@ abstract contract Pausable {
   bool public paused;
   address public pauseOwner;
 
-  modifier auth () {
+  modifier __Pausable_auth () {
     require(msg.sender == pauseOwner, "must be pauseOwner");
     _;
   }
@@ -51,7 +51,7 @@ abstract contract Pausable {
     _;
   }
 
-  function pause() external auth {
+  function pause() external __Pausable_auth {
     _pause();
   }
 
@@ -67,7 +67,7 @@ abstract contract Pausable {
     emit Paused(msg.sender);
   }
 
-  function unpause() external auth {
+  function unpause() external __Pausable_auth {
     _unpause();
   }
 

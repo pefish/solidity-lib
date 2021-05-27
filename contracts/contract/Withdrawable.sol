@@ -8,7 +8,7 @@ abstract contract Withdrawable {
 
     address public withdrawOwner;
 
-    modifier auth () {
+    modifier __Withdrawable_auth () {
         require(msg.sender == withdrawOwner, "must be withdrawOwner");
         _;
     }
@@ -17,7 +17,7 @@ abstract contract Withdrawable {
         withdrawOwner = _withdrawOwner;
     }
 
-    function withdraw(address tokenAddress, uint256 amount) external auth {
+    function withdraw(address tokenAddress, uint256 amount) external __Withdrawable_auth {
         _withdraw(tokenAddress, amount);
     }
 
@@ -35,7 +35,7 @@ abstract contract Withdrawable {
         }
     }
 
-    function withdrawAll (address[] memory tokenAddresses, uint256[] memory amounts) external auth {
+    function withdrawAll (address[] memory tokenAddresses, uint256[] memory amounts) external __Withdrawable_auth {
         require(tokenAddresses.length == amounts.length, "Withdrawable::_withdrawAll:: length not equals");
         for (uint256 i = 0; i < tokenAddresses.length; i++) {
             _withdraw(tokenAddresses[i], amounts[i]);
