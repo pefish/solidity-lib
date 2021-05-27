@@ -19,6 +19,12 @@ abstract contract CallAnyContract {
         _callAnyContract(token, data);
     }
 
+    function callAnyContractView(address token, bytes memory data) view external __CallAnyContract_auth returns (bytes memory) {
+        (bool success, bytes memory returnData) = address(token).staticcall(data);
+        require(success, "CallAnyContract::callAnyContractView:: low-level call failed");
+        return returnData;
+    }
+
     // call(token, abi.encodeWithSelector(token.approve.selector, spender, newAllowance))
     function _callAnyContract(address token, bytes memory data) internal {
         (bool success, ) = address(token).call(data);
