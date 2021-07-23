@@ -1,7 +1,7 @@
 {
   "name": "@pefish/solidity-lib",
   "description": "Solidity libs",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "repository": {
     "type": "git",
     "url": "https://github.com/pefish/solidity-lib.git"

@@ -4,6 +4,7 @@ pragma solidity >=0.8.0;
 
 library RandomGenUtil {
   function randomGen(uint256 seed, uint256 max) internal view returns (uint256 randomNumber) {
+    require(max > 0, "max must larger than 0");
     return (
       uint256(
         keccak256(
