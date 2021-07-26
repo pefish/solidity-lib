@@ -18,6 +18,15 @@ contract HasTokenURI {
   }
 
   /**
+ * @dev Returns an URI for a given token ID.
+ * Throws if the token ID does not exist. May return an empty string.
+ * @param tokenId uint256 ID of the token to query
+ */
+  function tokenURI(uint256 tokenId) external view returns (string memory) {
+    return _tokenURI(tokenId);
+  }
+
+  /**
    * @dev Returns an URI for a given token ID.
    * Throws if the token ID does not exist. May return an empty string.
    * @param tokenId uint256 ID of the token to query
