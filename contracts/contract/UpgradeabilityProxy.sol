@@ -64,12 +64,12 @@ abstract contract UpgradeabilityProxy {
         assembly {
             calldatacopy(0, 0, calldatasize())
             let result := delegatecall(
-            gas(),
-            implementationAddress,
-            0,
-            calldatasize(),
-            0,
-            0
+                gas(),
+                implementationAddress,
+                0,
+                calldatasize(),
+                0,
+                0
             )
 
             returndatacopy(0, 0, returndatasize())
