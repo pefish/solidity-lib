@@ -53,20 +53,4 @@ interface IErc721 is IErc165 {
 
 
   function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory data) external;
-
-
-  /**
- * @dev Returns the token collection name.
- */
-  function name() external view returns (string memory);
-
-  /**
-   * @dev Returns the token collection symbol.
-   */
-  function symbol() external view returns (string memory);
-
-  /**
-   * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.
-   */
-  function tokenURI(uint256 tokenId) external view returns (string memory);
 }

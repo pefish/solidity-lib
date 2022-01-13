@@ -4,10 +4,11 @@
 pragma solidity >=0.8.0;
 
 import "./Erc721.sol";
+import "../../interface/IErc721Enumerable.sol";
 
-contract Erc721Enumerable is Erc721 {
+abstract contract Erc721Enumerable is Erc721, IErc721Enumerable {
   // Mapping from owner to list of owned token IDs
-  mapping(address => uint256[]) private _ownedTokens;
+  mapping(address => mapping(uint256 => uint256)) private _ownedTokens;
 
   // Mapping from token ID to index of the owner tokens list
   mapping(uint256 => uint256) private _ownedTokensIndex;
@@ -18,107 +19,68 @@ contract Erc721Enumerable is Erc721 {
   // Mapping from token id to position in the allTokens array
   mapping(uint256 => uint256) private _allTokensIndex;
 
-  /*
-   *     bytes4(keccak256('totalSupply()')) == 0x18160ddd
-   *     bytes4(keccak256('tokenOfOwnerByIndex(address,uint256)')) == 0x2f745c59
-   *     bytes4(keccak256('tokenByIndex(uint256)')) == 0x4f6ccce7
-   *
-   *     => 0x18160ddd ^ 0x2f745c59 ^ 0x4f6ccce7 == 0x780e9d63
-   */
-  bytes4 private constant _INTERFACE_ID_ERC721_ENUMERABLE = 0x780e9d63;
-
   /**
-   * @dev Constructor function.
+   * @dev See {IErc165-supportsInterface}.
    */
-  function __Erc721Enumerable_init (string memory _name, string memory _symbol) internal {
-    __Erc721_init(_name, _symbol);
-    // register the supported interface to conform to ERC721Enumerable via ERC165
-    _registerInterface(_INTERFACE_ID_ERC721_ENUMERABLE);
+  function supportsInterface(bytes4 interfaceId) public view virtual override(IErc165, Erc721) returns (bool) {
+    return interfaceId == type(IErc721Enumerable).interfaceId || super.supportsInterface(interfaceId);
   }
 
   /**
-   * @dev Gets the token ID at a given index of the tokens list of the requested owner.
-   * @param owner address owning the tokens list to be accessed
-   * @param index uint256 representing the index to be accessed of the requested tokens list
-   * @return uint256 token ID at the given index of the tokens list owned by the requested address
+   * @dev See {IErc721Enumerable-tokenOfOwnerByIndex}.
    */
-  function tokenOfOwnerByIndex(address owner, uint256 index) public view returns (uint256) {
-    require(index < balanceOf(owner), "ERC721Enumerable: owner index out of bounds");
+  function tokenOfOwnerByIndex(address owner, uint256 index) public view virtual override returns (uint256) {
+    require(index < Erc721.balanceOf(owner), "Erc721Enumerable: owner index out of bounds");
     return _ownedTokens[owner][index];
   }
 
   /**
-   * @dev Gets the total amount of tokens stored by the contract.
-   * @return uint256 representing the total amount of tokens
+   * @dev See {IErc721Enumerable-totalSupply}.
    */
-  function totalSupply() public view returns (uint256) {
+  function totalSupply() public view virtual override returns (uint256) {
     return _allTokens.length;
   }
 
   /**
-   * @dev Gets the token ID at a given index of all the tokens in this contract
-   * Reverts if the index is greater or equal to the total number of tokens.
-   * @param index uint256 representing the index to be accessed of the tokens list
-   * @return uint256 token ID at the given index of the tokens list
+   * @dev See {IErc721Enumerable-tokenByIndex}.
    */
-  function tokenByIndex(uint256 index) public view returns (uint256) {
-    require(index < totalSupply(), "ERC721Enumerable: global index out of bounds");
+  function tokenByIndex(uint256 index) public view virtual override returns (uint256) {
+    require(index < Erc721Enumerable.totalSupply(), "Erc721Enumerable: global index out of bounds");
     return _allTokens[index];
   }
 
   /**
-   * @dev Internal function to transfer ownership of a given token ID to another address.
-   * As opposed to transferFrom, this imposes no restrictions on msg.sender.
-   * @param from current owner of the token
-   * @param to address to receive the ownership of the given token ID
-   * @param tokenId uint256 ID of the token to be transferred
+   * @dev Hook that is called before any token transfer. This includes minting
+   * and burning.
+   *
+   * Calling conditions:
+   *
+   * - When `from` and `to` are both non-zero, ``from``'s `tokenId` will be
+   * transferred to `to`.
+   * - When `from` is zero, `tokenId` will be minted for `to`.
+   * - When `to` is zero, ``from``'s `tokenId` will be burned.
+   * - `from` cannot be the zero address.
+   * - `to` cannot be the zero address.
+   *
+   * To learn more about hooks, head to xref:ROOT:extending-contracts.adoc#using-hooks[Using Hooks].
    */
-  function _transferFrom(address from, address to, uint256 tokenId) internal override {
-    super._transferFrom(from, to, tokenId);
+  function _beforeTokenTransfer(
+    address from,
+    address to,
+    uint256 tokenId
+  ) internal virtual override {
+    super._beforeTokenTransfer(from, to, tokenId);
 
-    _removeTokenFromOwnerEnumeration(from, tokenId);
-
-    _addTokenToOwnerEnumeration(to, tokenId);
-  }
-
-  /**
-   * @dev Internal function to mint a new token.
-   * Reverts if the given token ID already exists.
-   * @param to address the beneficiary that will own the minted token
-   * @param tokenId uint256 ID of the token to be minted
-   */
-  function _mint(address to, uint256 tokenId) internal override {
-    super._mint(to, tokenId);
-
-    _addTokenToOwnerEnumeration(to, tokenId);
-
-    _addTokenToAllTokensEnumeration(tokenId);
-  }
-
-  /**
-   * @dev Internal function to burn a specific token.
-   * Reverts if the token does not exist.
-   * Deprecated, use {ERC721-_burn} instead.
-   * @param owner owner of the token to burn
-   * @param tokenId uint256 ID of the token being burned
-   */
-  function _burn(address owner, uint256 tokenId) internal virtual override {
-    super._burn(owner, tokenId);
-
-    _removeTokenFromOwnerEnumeration(owner, tokenId);
-    // Since tokenId will be deleted, we can clear its slot in _ownedTokensIndex to trigger a gas refund
-    _ownedTokensIndex[tokenId] = 0;
-
-    _removeTokenFromAllTokensEnumeration(tokenId);
-  }
-
-  /**
-   * @dev Gets the list of token IDs of the requested owner.
-   * @param owner address owning the tokens
-   * @return uint256[] List of token IDs owned by the requested address
-   */
-  function _tokensOfOwner(address owner) internal view returns (uint256[] storage) {
-    return _ownedTokens[owner];
+    if (from == address(0)) {
+      _addTokenToAllTokensEnumeration(tokenId);
+    } else if (from != to) {
+      _removeTokenFromOwnerEnumeration(from, tokenId);
+    }
+    if (to == address(0)) {
+      _removeTokenFromAllTokensEnumeration(tokenId);
+    } else if (to != from) {
+      _addTokenToOwnerEnumeration(to, tokenId);
+    }
   }
 
   /**
@@ -127,8 +89,9 @@ contract Erc721Enumerable is Erc721 {
    * @param tokenId uint256 ID of the token to be added to the tokens list of the given address
    */
   function _addTokenToOwnerEnumeration(address to, uint256 tokenId) private {
-    _ownedTokensIndex[tokenId] = _ownedTokens[to].length;
-    _ownedTokens[to].push(tokenId);
+    uint256 length = Erc721.balanceOf(to);
+    _ownedTokens[to][length] = tokenId;
+    _ownedTokensIndex[tokenId] = length;
   }
 
   /**
@@ -152,7 +115,7 @@ contract Erc721Enumerable is Erc721 {
     // To prevent a gap in from's tokens array, we store the last token in the index of the token to delete, and
     // then delete the last slot (swap and pop).
 
-    uint256 lastTokenIndex = _ownedTokens[from].length - 1;
+    uint256 lastTokenIndex = Erc721.balanceOf(from) - 1;
     uint256 tokenIndex = _ownedTokensIndex[tokenId];
 
     // When the token to delete is the last token, the swap operation is unnecessary
@@ -164,10 +127,8 @@ contract Erc721Enumerable is Erc721 {
     }
 
     // This also deletes the contents at the last position of the array
-    _ownedTokens[from].pop();
-
-    // Note that _ownedTokensIndex[tokenId] hasn't been cleared: it still points to the old slot (now occupied by
-    // lastTokenId, or just over the end of the array if the token was the last one).
+    delete _ownedTokensIndex[tokenId];
+    delete _ownedTokens[from][lastTokenIndex];
   }
 
   /**
@@ -191,8 +152,8 @@ contract Erc721Enumerable is Erc721 {
     _allTokensIndex[lastTokenId] = tokenIndex; // Update the moved token's index
 
     // This also deletes the contents at the last position of the array
+    delete _allTokensIndex[tokenId];
     _allTokens.pop();
-    _allTokensIndex[tokenId] = 0;
   }
 }
 
