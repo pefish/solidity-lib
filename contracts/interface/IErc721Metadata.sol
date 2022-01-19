@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: MIT
+
+pragma solidity >=0.8.0;
+
 import "./IErc721.sol";
 
 interface IErc721Metadata is IErc721 {
